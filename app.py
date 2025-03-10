@@ -25,6 +25,17 @@ if uploaded_file:
         
         st.write("### Data Kartu Obligo", df.head())
 
+        # Kolom yang diharapkan
+        expected_columns = [
+            "No.", "No. Loan", "Nama Proyek", "Nomor Kontrak/PO/SPK", "Bowheer", 
+            "Nilai Kontrak / Proyek", "Jatuh Tempo Kontrak", "Total Pencairan (Rp)", 
+            "Jatuh Tempo Fasilitas", "Baki Debet (Rp)", "Keterangan", "Progress", 
+            "Tanggal Kredit", "Nominal Kredit"
+        ]
+        
+        # Filter hanya kolom yang sesuai
+        df = df[[col for col in expected_columns if col in df.columns]]
+        
         # Pastikan ada kolom yang sesuai
         required_columns = {"Nama Proyek", "Total Pencairan (Rp)", "Baki Debet (Rp)", "Nominal Kredit", "Jatuh Tempo Kontrak", "Jatuh Tempo Fasilitas"}
         if not required_columns.issubset(df.columns):
