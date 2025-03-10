@@ -12,16 +12,14 @@ uploaded_file = st.file_uploader("Upload file kartu obligo (CSV/XLS/XLSX)", type
 
 if uploaded_file:
     try:
+        file_bytes = io.BytesIO(uploaded_file.getvalue())
+        
         if uploaded_file.name.endswith(".csv"):
-            df = pd.read_csv(uploaded_file)
-        elif uploaded_file.name.endswith(".xls"):
-            file_bytes = io.BytesIO(uploaded_file.getvalue())
-            df = pd.read_excel(file_bytes, engine="xlrd")  # Pakai engine xlrd untuk XLS
+            df = pd.read_csv(file_bytes)
         else:
-            file_bytes = io.BytesIO(uploaded_file.getvalue())
-            xls = pd.ExcelFile(file_bytes, engine="openpyxl")
+            xls = pd.ExcelFile(file_bytes, engine=None)  # Biarkan pandas memilih engine yang sesuai
             sheet_name = st.selectbox("Pilih sheet untuk dianalisis", xls.sheet_names)
-            df = pd.read_excel(xls, sheet_name=sheet_name, engine="openpyxl")
+            df = pd.read_excel(xls, sheet_name=sheet_name)
         
         # Cari baris header yang benar
         for i in range(5):  # Cek di 5 baris pertama
