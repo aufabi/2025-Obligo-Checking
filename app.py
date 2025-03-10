@@ -21,6 +21,9 @@ if uploaded_file:
             sheet_name = st.selectbox("Pilih sheet untuk dianalisis", xls.sheet_names)
             df = pd.read_excel(xls, sheet_name=sheet_name)
         
+        # Mengatasi duplikasi nama kolom
+        df.columns = pd.io.parsers.ParserBase({'names': df.columns})._maybe_dedup_names(df.columns)
+        
         # Cari baris header yang benar
         for i in range(5):  # Cek di 5 baris pertama
             if "No. Loan" in df.iloc[i].values:
@@ -44,7 +47,7 @@ if uploaded_file:
         # Pastikan ada kolom yang sesuai
         required_columns = {"Nama Proyek", "Total Pencairan (Rp)", "Baki Debet (Rp)", "Nominal Kredit", "Jatuh Tempo Kontrak", "Jatuh Tempo Fasilitas"}
         if not required_columns.issubset(df.columns):
-            st.error("File harus memiliki kolom yang sesuai dengan format kartu obligo.")
+            st.error("File harus memiliki kolom yang sesuai dengan format kartu obligo. Cek apakah nama kolom di file sudah benar.")
         else:
             # Hitung Saldo Kredit
             df["Saldo Kredit"] = df["Nominal Kredit"] - df["Total Pencairan (Rp)"]
