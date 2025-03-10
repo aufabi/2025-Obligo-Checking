@@ -23,6 +23,13 @@ if uploaded_file:
             sheet_name = st.selectbox("Pilih sheet untuk dianalisis", xls.sheet_names)
             df = pd.read_excel(xls, sheet_name=sheet_name, engine="openpyxl")
         
+        # Cari baris header yang benar
+        for i in range(5):  # Cek di 5 baris pertama
+            if "No. Loan" in df.iloc[i].values:
+                df.columns = df.iloc[i]
+                df = df[i+1:].reset_index(drop=True)
+                break
+        
         st.write("### Data Kartu Obligo", df.head())
 
         # Kolom yang diharapkan
