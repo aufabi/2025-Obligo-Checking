@@ -15,11 +15,9 @@ if uploaded_file:
         df = pd.read_csv(uploaded_file)
     else:
         # Load all sheet names
-        if uploaded_file.name.endswith(".xls"):
-            df = pd.read_excel(uploaded_file)  # Gunakan xlrd jika perlu
-        else:
-            df = pd.read_excel(uploaded_file, engine="openpyxl")  # Gunakan openpyxl untuk .xlsx
-
+        xls = pd.ExcelFile(uploaded_file, engine="openpyxl")
+        sheet_name = st.selectbox("Pilih sheet untuk dianalisis", xls.sheet_names)
+        df = pd.read_excel(xls, sheet_name=sheet_name, engine="openpyxl")
     
     st.write("### Data Kartu Obligo", df.head())
 
