@@ -12,13 +12,13 @@ uploaded_file = st.file_uploader("Upload file kartu obligo (CSV/XLS/XLSX)", type
 if uploaded_file:
     # Load Data
     if uploaded_file.name.endswith(".csv"):
-    df = pd.read_csv(uploaded_file)
-else:
-    try:
-        df = pd.read_excel(uploaded_file, engine="openpyxl")
-    except Exception as e:
-        st.error(f"Terjadi kesalahan saat membaca file Excel: {e}")
-        st.stop()
+        df = pd.read_csv(uploaded_file)
+    else:
+        try:
+            df = pd.read_excel(uploaded_file, engine="openpyxl")
+        except Exception as e:
+            st.error(f"Terjadi kesalahan saat membaca file Excel: {e}")
+            st.stop()
     
     st.write("### Data Kartu Obligo", df.head())
 
