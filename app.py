@@ -16,13 +16,16 @@ if uploaded_file:
         
         if uploaded_file.name.endswith(".csv"):
             df = pd.read_csv(file_bytes)
+        elif uploaded_file.name.endswith(".xls"):
+            xls = pd.ExcelFile(file_bytes, engine="xlrd")  # Gunakan xlrd untuk .xls
         else:
-            xls = pd.ExcelFile(file_bytes, engine=None)  # Biarkan pandas memilih engine yang sesuai
-            sheet_name = st.selectbox("Pilih sheet untuk dianalisis", xls.sheet_names)
-            df = pd.read_excel(xls, sheet_name=sheet_name)
+            xls = pd.ExcelFile(file_bytes, engine="openpyxl")  # Gunakan openpyxl untuk .xlsx
+        
+        sheet_name = st.selectbox("Pilih sheet untuk dianalisis", xls.sheet_names)
+        df = pd.read_excel(xls, sheet_name=sheet_name)
         
         # Mengatasi duplikasi nama kolom
-        df.columns = pd.io.parsers.ParserBase({'names': df.columns})._maybe_dedup_names(df.columns)
+        df.columns = pd.io.parsers.read_csv(io.StringIO(','.join(df.columns))).columns
         
         # Cari baris header yang benar
         for i in range(5):  # Cek di 5 baris pertama
