@@ -37,7 +37,7 @@ if uploaded_file:
         # Ubah tipe data agar dapat diserialisasi ke JSON
         df = df.convert_dtypes()
         df = df.applymap(lambda x: int(x) if isinstance(x, pd.Int64Dtype) else x)
-        df = df.astype({col: "float" for col in df.select_dtypes(include=["int64"]).columns})
+        df = df.astype({col: "int" for col in df.select_dtypes(include=["int64"]).columns})
         
         st.write("### Data Kartu Obligo", df.head())
 
@@ -61,12 +61,11 @@ if uploaded_file:
             df["Saldo Kredit"] = df["Nominal Kredit"] - df["Total Pencairan (Rp)"]
             
             # Konversi tanggal ke string sebelum menampilkan
-            df["Jatuh Tempo Kontrak"] = df["Jatuh Tempo Kontrak"].astype(str)
-            df["Jatuh Tempo Fasilitas"] = df["Jatuh Tempo Fasilitas"].astype(str)
+            df = df.astype(str)
             
             # Tampilkan Data
             st.write("### Ringkasan Kredit Proyek")
-            st.dataframe(df.astype(str))
+            st.dataframe(df)
             
             # Grafik Penggunaan Kredit
             fig_usage = px.bar(df, x="Nama Proyek", y="Total Pencairan (Rp)", title="Total Pencairan Kredit per Proyek", 
