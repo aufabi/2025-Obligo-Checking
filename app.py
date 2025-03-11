@@ -24,8 +24,8 @@ if uploaded_file:
         sheet_name = st.selectbox("Pilih sheet untuk dianalisis", xls.sheet_names)
         df = pd.read_excel(xls, sheet_name=sheet_name)
         
-        # Mengatasi duplikasi nama kolom
-        df.columns = pd.io.parsers.read_csv(io.StringIO(','.join(df.columns))).columns
+        # Hapus baris kosong
+        df.dropna(how="all", inplace=True)
         
         # Cari baris header yang benar
         for i in range(5):  # Cek di 5 baris pertama
